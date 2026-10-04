@@ -21,6 +21,10 @@ from modules.ddi import get_ddi_interactions
 from modules.comorbidity import get_comorbidity_risks
 from modules.pgx import get_pgx_risks
 from scorer import compute_risk
+try:
+    import frontend  # noqa: F401
+except ImportError:
+    pass
 
 _FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
