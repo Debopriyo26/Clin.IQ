@@ -193,6 +193,21 @@ def serve_index():
     return jsonify({"status": "ok", "app": "Clin.IQ"}), 200
 
 
+@app.route("/api/debug-paths")
+def debug_paths():
+    base = Path(__file__).resolve().parent
+    root = base.parent
+    task = Path("/var/task")
+    return jsonify({
+        "file": str(__file__),
+        "base": str(base),
+        "root": str(root),
+        "base_contents": [p.name for p in base.iterdir()] if base.is_dir() else [],
+        "root_contents": [p.name for p in root.iterdir()] if root.is_dir() else [],
+        "task_contents": [p.name for p in task.iterdir()] if task.is_dir() else []
+    })
+
+
 @app.route("/<path:filename>")
 def serve_static(filename):
     path, d = _find_static_file(filename)
