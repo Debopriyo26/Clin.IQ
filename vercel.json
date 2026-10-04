@@ -1,7 +1,12 @@
 {
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "{frontend/**,assets/**,*.html,*.js,*.css,backend/**}"
+    }
+  },
   "rewrites": [
     {
-      "source": "/api/(.*)",
+      "source": "/(.*)",
       "destination": "/api/index.py"
     }
   ]

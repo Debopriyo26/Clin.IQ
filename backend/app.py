@@ -176,15 +176,28 @@ def _require_role(*roles):
 
 # ── Static Frontend Routes (Serves the UI directly on port 5000) ───────────
 
+def _find_static_file(filename):
+    for d in [_FRONTEND_DIR, Path(__file__).resolve().parent.parent]:
+        candidate = d / filename
+        if candidate.is_file():
+            return candidate, d
+    return None, None
+
+
 @app.route("/")
 def serve_index():
-    return send_from_directory(str(_FRONTEND_DIR), "index.html")
+    for f in ["index.html", "auth.html"]:
+        path, d = _find_static_file(f)
+        if path:
+            return send_from_directory(str(d), f)
+    return jsonify({"status": "ok", "app": "Clin.IQ"}), 200
+
 
 @app.route("/<path:filename>")
 def serve_static(filename):
-    target = _FRONTEND_DIR / filename
-    if target.is_file():
-        return send_from_directory(str(_FRONTEND_DIR), filename)
+    path, d = _find_static_file(filename)
+    if path:
+        return send_from_directory(str(d), filename)
     return jsonify({"error": f"File '{filename}' not found"}), 404
 
 
